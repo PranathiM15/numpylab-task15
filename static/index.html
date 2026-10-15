@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101322">
+  <meta name="description" content="A clean, interactive NumPy dashboard for descriptive statistics and IQR outlier detection.">
+  <title>NumPy Insight Lab — Task 15</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="NumPy Insight Lab home">
+        <span class="brand-mark">Σ</span>
+        <span class="brand-copy"><strong>NUMPY<span> / </span>INSIGHT LAB</strong><small>STATISTICAL ANALYSIS WORKSPACE</small></span>
+      </a>
+      <div class="topbar-right">
+        <span class="status-dot" aria-hidden="true"></span><span class="engine-status" id="engineStatus">CONNECTING ENGINE</span>
+        <span class="task-chip">TASK <b>15</b></span>
+      </div>
+    </header>
+
+    <main class="page-content">
+      <section class="intro-row" aria-labelledby="pageTitle">
+        <div>
+          <p class="eyebrow"><span class="eyebrow-line"></span> DATA EXPLORATION / 01</p>
+          <h1 id="pageTitle">Make the numbers<br><em>tell the story.</em></h1>
+          <p class="intro-copy">A small dataset can reveal a lot. Run the numbers, compare the center, and catch values that sit outside the usual pattern.</p>
+        </div>
+        <div class="intro-note" aria-label="Project details">
+          <span class="note-symbol">↳</span>
+          <span><b>Built with Python + NumPy</b><small>Fast, transparent descriptive statistics</small></span>
+        </div>
+      </section>
+
+      <section class="workspace-grid" aria-label="Statistical analysis workspace">
+        <aside class="control-panel panel">
+          <div class="panel-heading">
+            <div><p class="section-kicker">YOUR INPUT</p><h2>Data controls</h2></div>
+            <span class="step-number">01</span>
+          </div>
+
+          <label class="field-label" for="sampleSelect">Start with a sample</label>
+          <select id="sampleSelect" class="select-control">
+            <option value="student">Student performance</option>
+            <option value="sales">Monthly sales</option>
+            <option value="custom">My own dataset</option>
+          </select>
+          <p class="field-help" id="sampleDescription">A small score set with one unusually low result.</p>
+
+          <div class="field-divider"></div>
+          <label class="field-label" for="datasetName">Dataset name</label>
+          <input id="datasetName" class="text-control" type="text" maxlength="100" value="Student performance scores" placeholder="e.g. Exam scores">
+
+          <div class="textarea-heading"><label class="field-label" for="datasetInput">Numerical observations</label><span id="pointCount" class="count-label">11 VALUES</span></div>
+          <textarea id="datasetInput" class="textarea-control" spellcheck="false" rows="6" aria-describedby="inputHelp">72, 85, 91, 68, 88, 94, 76, 83, 79, 97, 42</textarea>
+          <p class="field-help" id="inputHelp">Separate values with commas, spaces, or new lines. Enter at least 3 numbers.</p>
+
+          <button id="analyzeButton" class="primary-button" type="button"><span>Run statistical analysis</span><span class="button-arrow">↗</span></button>
+          <p class="privacy-note"><span>◈</span> Analysis runs on this app's Python server. No account or database required.</p>
+          <div id="errorMessage" class="error-message" role="alert" hidden></div>
+          <div class="control-footer"><span>METHODS INCLUDED</span><span>Mean · Median · σ · IQR</span></div>
+        </aside>
+
+        <div class="results-column">
+          <div class="results-heading">
+            <div><p class="section-kicker">THE READOUT</p><h2>Statistical snapshot</h2></div>
+            <div class="dataset-tag"><span class="mini-square"></span><span id="activeDataset">Student performance scores</span></div>
+          </div>
+
+          <div class="stat-grid" aria-live="polite">
+            <article class="stat-card stat-featured"><div class="stat-top"><span>MEAN</span><span class="stat-icon">μ</span></div><div class="stat-value" id="meanValue">—</div><div class="stat-foot">Arithmetic average</div><div class="card-accent"></div></article>
+            <article class="stat-card"><div class="stat-top"><span>MEDIAN</span><span class="stat-icon">↔</span></div><div class="stat-value" id="medianValue">—</div><div class="stat-foot">Middle observation</div></article>
+            <article class="stat-card"><div class="stat-top"><span>STD. DEVIATION</span><span class="stat-icon">σ</span></div><div class="stat-value" id="stdValue">—</div><div class="stat-foot">Population spread</div></article>
+            <article class="stat-card"><div class="stat-top"><span>MINIMUM</span><span class="stat-icon">↓</span></div><div class="stat-value" id="minValue">—</div><div class="stat-foot">Smallest value</div></article>
+            <article class="stat-card"><div class="stat-top"><span>MAXIMUM</span><span class="stat-icon">↑</span></div><div class="stat-value" id="maxValue">—</div><div class="stat-foot">Largest value</div></article>
+          </div>
+
+          <section class="panel comparison-panel" aria-labelledby="comparisonTitle">
+            <div class="panel-heading compact-heading">
+              <div><p class="section-kicker">CENTER OF THE DATA</p><h2 id="comparisonTitle">Mean vs. median</h2></div>
+              <span class="range-chip" id="rangeChip">RANGE —</span>
+            </div>
+            <p class="insight-copy" id="centerInsight">Run an analysis to see how the mean and median compare.</p>
+            <div class="center-plot" aria-label="Mean and median position within the data range">
+              <div class="center-track"><span id="medianMarker" class="center-marker median-marker"><i></i><b>MEDIAN</b></span><span id="meanMarker" class="center-marker mean-marker"><i></i><b>MEAN</b></span></div>
+              <div class="track-labels"><span id="trackMin">MIN —</span><span>DATA RANGE</span><span id="trackMax">MAX —</span></div>
+            </div>
+            <div class="center-legend"><span><i class="legend-dot legend-mean"></i>Mean <b id="legendMean">—</b></span><span><i class="legend-dot legend-median"></i>Median <b id="legendMedian">—</b></span></div>
+          </section>
+
+          <section class="panel distribution-panel" aria-labelledby="distributionTitle">
+            <div class="panel-heading compact-heading">
+              <div><p class="section-kicker">OBSERVATION MAP</p><h2 id="distributionTitle">Value distribution</h2></div>
+              <span class="range-chip" id="observationChip">— OBSERVATIONS</span>
+            </div>
+            <p class="subtle-copy">Each bar represents one observation. Highlighted bars are flagged by the IQR rule.</p>
+            <div class="distribution-axis"><span>LOWER VALUES</span><span>RELATIVE VALUE</span><span>HIGHER VALUES</span></div>
+            <div id="distributionRows" class="distribution-rows" aria-live="polite"></div>
+            <p id="chartFootnote" class="chart-footnote">Bars are scaled relative to the selected dataset.</p>
+          </section>
+
+          <section class="panel outlier-panel" aria-labelledby="outlierTitle">
+            <div class="panel-heading compact-heading">
+              <div><p class="section-kicker">QUALITY CHECK</p><h2 id="outlierTitle">Unusual values</h2></div>
+              <span class="outlier-count" id="outlierCount">0 FLAGGED</span>
+            </div>
+            <p class="subtle-copy">Uses the 1.5 × IQR rule: values below Q1 − 1.5×IQR or above Q3 + 1.5×IQR are flagged.</p>
+            <div id="outlierResults" class="outlier-results" aria-live="polite"><div class="empty-state">Your outlier check will appear here.</div></div>
+            <div class="fence-row"><div><span>LOWER FENCE</span><b id="lowFence">—</b></div><div><span>UPPER FENCE</span><b id="highFence">—</b></div><div><span>IQR</span><b id="iqrValue">—</b></div></div>
+          </section>
+
+          <footer class="page-footer"><span>NUMPY INSIGHT LAB <i>·</i> TASK 15</span><span>Descriptive statistics, made clear.</span></footer>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
